@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      {% if title %}
+      <title>{{ title }} - Twydter</title>
+      {% else %}
+      <title>Welcome to Twydter</title>
+      {% endif %}
+</head>
+<body>
+    <div>
+        Twydter:
+        <a href="/index">Home</a>
+        <a href="/login">Login</a>
+    </div>
+
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>
