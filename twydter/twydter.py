@@ -1,1 +1,0 @@
-from twydter import app

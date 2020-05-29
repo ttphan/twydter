@@ -1,7 +1,7 @@
 from flask import render_template
 
-from twydter import app
-from twydter.forms import LoginForm
+from twydter_app import app
+from twydter_app.forms import LoginForm
 
 @app.route('/')
 @app.route('/index')
