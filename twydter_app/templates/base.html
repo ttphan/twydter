@@ -10,11 +10,22 @@
 <body>
     <div>
         Twydter:
-        <a href="/index">Home</a>
-        <a href="/login">Login</a>
+        <a href={{ url_for('main.index') }}>Home</a>
+        {% if current_user.is_anonymous %}
+            <a href={{ url_for('auth.login') }}>Login</a>
+        {% else %}
+            <a href={{ url_for('main.user', username=current_user.username) }}>Profile</a>
+            <a href={{ url_for('auth.logout') }}>Logout</a>
+        {% endif %}
     </div>
-
     <hr>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     {% block content %}{% endblock %}
 </body>
 </html>
