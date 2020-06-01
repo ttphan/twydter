@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <table>
+   <table class="table">
         <tr>
-            <td><img src="{{ user.avatar(128) }}"></td>
-            <td><h1>User: {{ user.username }}</h1></td>
+            <td width="256px"><img src="{{ user.avatar(256) }}"></td>
+            <td>
+                <h1>User: {{ user.username }}</h1>
+            </td>
         </tr>
     </table>
-    <hr>
     {% for post in posts %}
         {% include '_post.html' %}
     {% endfor %}

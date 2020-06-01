@@ -1,6 +1,10 @@
 <table class="table table-hover">
     <tr>
-        <td width="50px"><img src="{{ user.avatar(36) }}"></td>
-        <td>{{ post.author.username }} says:<br>{{ post.body }}</td>
+        {% if post.author %}
+            <td width="50px"><img src="{{ post.author.avatar(36) }}"></td>
+            <td>{{ post.author.username }} says:<br>{{ post.body }}</td>
+        {% else %}
+            <td>[USER DELETED] says:<br>{{ post.body }}</td>
+        {% endif %}
     </tr>
 </table>
