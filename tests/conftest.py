@@ -14,6 +14,9 @@ def app(request):
     config.PRESERVE_CONTEXT_ON_EXCEPTION = False
     config.TESTING = True
 
+    # Disable CSRF for testing only
+    config.WTF_CSRF_ENABLED = False
+
     app = create_app(config)
 
     with app.app_context():
