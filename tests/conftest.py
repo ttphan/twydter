@@ -1,7 +1,14 @@
 import pytest
+from flask import url_for
 
 from twydter_app import create_app, extensions
 from config import Config
+from twydter_app.models import User
+
+INVALID: bytes = b'Invalid username or password'
+USERNAME = 'foo'
+PASSWORD = 'bar'
+EMAIL = '1@2.nl'
 
 
 @pytest.fixture(scope='session')
@@ -51,3 +58,22 @@ def session(db, request):
     transaction.rollback()
     connection.close()
     session.remove()
+
+
+@pytest.fixture
+def user(session):
+    user = User(username=USERNAME, email=EMAIL)
+    user.set_password(PASSWORD)
+
+    session.add(user)
+    session.commit()
+
+    yield user
+
+
+@pytest.fixture
+def logged_in(user, client):
+    client.post(url_for('auth.login'), data=dict(
+        username=USERNAME,
+        password=PASSWORD,
+    ))

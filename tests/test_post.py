@@ -1,4 +1,5 @@
 import pytest
+from flask import url_for
 from sqlalchemy.exc import IntegrityError
 
 from twydter_app.models import Post, User
@@ -52,3 +53,37 @@ def test_post_user_relation(session):
     assert session.query(Post).count() == 3
 
     assert not (post1.author or post2.author)
+
+
+def test_create_post(user, logged_in, client, session):
+    assert session.query(Post).count() == 0
+
+    response = client.post(url_for('main.index'), follow_redirects=True, data=dict(
+        post='Lorem ipsum'
+    ))
+
+    assert response.status_code == 200
+    assert b'Post submitted' in response.data
+    assert b'Lorem ipsum' in response.data
+
+    assert session.query(Post).count() == 1
+    assert session.query(Post).get(1).body == 'Lorem ipsum'
+
+
+def test_create_invalid_post(user, logged_in, client, session):
+    assert session.query(Post).count() == 0
+
+    response = client.post(url_for('main.index'), follow_redirects=True, data=dict(
+        post=''
+    ))
+
+    assert response.status_code == 200
+    assert b'This field is required' in response.data
+
+    response = client.post(url_for('main.index'), follow_redirects=True, data=dict(
+        post='a' * 141
+    ))
+    assert b'Field must be between 1 and 140 characters long' in response.data
+
+    assert session.query(Post).count() == 0
+

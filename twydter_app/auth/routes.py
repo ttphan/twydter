@@ -21,18 +21,17 @@ def login():
 
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
-            return redirect(url_for('auth.login'))
+        else:
+            login_user(user, remember=form.remember_me.data)
 
-        login_user(user, remember=form.remember_me.data)
+            # Flask-Login adds next argument, enabling the user to go the page he tried to go right after
+            next_page = request.args.get('next')
 
-        # Flask-Login adds next argument, enabling the user to go the page he tried to go right after
-        next_page = request.args.get('next')
+            # netloc is used for protection to ensure the next is in our relative space and not a malicious external site
+            if not next_page or url_parse(next_page).netloc != '':
+                next_page = url_for('main.index')
 
-        # netloc is used for protection to ensure the next is in our relative space and not a malicious external site
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('main.index')
-
-        return redirect(next_page)
+            return redirect(next_page)
     return render_template('auth/login.html', title='Sign up', form=form)
 
 
